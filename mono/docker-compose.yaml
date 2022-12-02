@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  mongo01:
+    container_name: mongo01
+    image: mongo
+    restart: always
+    volumes:
+      - ./scripts/rs-init.sh:/scripts/rs-init.sh
+      - ./scripts/init.js:/scripts/init.js
+      - mongodata:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - codebloxnet
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "codeblox" ]
+    hostname: mongo01
+
+  mongo02:
+    container_name: mongo02
+    image: mongo
+    restart: always
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - 27018:27017
+    networks:
+      - codebloxnet
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "codeblox" ]
+    hostname: mongo02
+
+  mongo03:
+    container_name: mongo03
+    image: mongo
+    restart: always
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - 27019:27017
+    networks:
+      - codebloxnet
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "codeblox" ]
+    hostname: mongo03
+
+volumes:
+  mongodata:
+networks:
+  codebloxnet:
+    driver: bridge
+
